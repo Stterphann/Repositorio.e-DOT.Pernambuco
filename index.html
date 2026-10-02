@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repositório Público de Documentos - GOV.BR</title>
+  
+  <!-- Fonte Oficial GOV.BR / Rawline -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rawline@1.0.0/css/rawline.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --gov-blue: #1351b4;
+      --gov-dark-blue: #0c326f;
+      --gov-white: #ffffff;
+      --gov-gray-10: #f8f8f8;
+      --gov-gray-20: #ededed;
+      --gov-gray-80: #333333;
+      --gov-yellow: #ffcd07;
+      --font-main: 'Rawline', sans-serif, helvetica;
+      --font-scale: 100%;
+    }
+
+    body.high-contrast {
+      --gov-blue: #ffff00;
+      --gov-dark-blue: #000000;
+      --gov-white: #000000;
+      --gov-gray-10: #121212;
+      --gov-gray-20: #222222;
+      --gov-gray-80: #ffffff;
+      color: #ffffff !important;
+      background-color: #000000 !important;
+    }
+
+    html {
+      font-size: var(--font-scale);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background-color: var(--gov-gray-10);
+      color: var(--gov-gray-80);
+    }
+
+    /* Barra de Acessibilidade */
+    .accessibility-bar {
+      background: var(--gov-dark-blue);
+      color: var(--gov-white);
+      padding: 6px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .accessibility-bar a, .accessibility-bar button {
+      color: var(--gov-white);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+      text-decoration: underline;
+    }
+
+    /* Header GOV.BR */
+    header.gov-header {
+      background: var(--gov-white);
+      border-bottom: 3px solid var(--gov-blue);
+      padding: 16px 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .gov-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gov-brand h1 {
+      font-size: 1.5rem;
+      color: var(--gov-blue);
+      margin: 0;
+    }
+
+    /* Layout Principal */
+    main {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .search-box {
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gov-blue);
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    /* Seções (Pastas do Drive) */
+    .category-section {
+      background: var(--gov-white);
+      border: 1px solid var(--gov-gray-20);
+      border-left: 6px solid var(--gov-blue);
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .category-header {
+      padding: 16px 20px;
+      background: var(--gov-white);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      user-select: none;
+    }
+
+    .category-header:hover {
+      background: var(--gov-gray-10);
+    }
+
+    .category-content {
+      display: none;
+      padding: 0 20px 16px 20px;
+      border-top: 1px solid var(--gov-gray-20);
+    }
+
+    .category-content.open {
+      display: block;
+    }
+
+    /* Lista de Documentos */
+    .doc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .doc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gov-gray-20);
+    }
+
+    .doc-item:last-child {
+      border-bottom: none;
+    }
+
+    .doc-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-info i {
+      color: #d93025; /* Vermelho PDF */
+      font-size: 1.4rem;
+    }
+
+    .doc-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-gov {
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: 1px solid var(--gov-blue);
+    }
+
+    .btn-primary {
+      background: var(--gov-blue);
+      color: var(--gov-white);
+    }
+
+    .btn-primary:hover {
+      background: var(--gov-dark-blue);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--gov-blue);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gov-gray-20);
+    }
+
+    /* Carregamento */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2rem;
+    }
+
+    /* Skip link */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+    .sr-only:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      padding: 8px;
+      background: var(--gov-yellow);
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Atalho de acessibilidade -->
+  <a class="sr-only" href="#main-content">Ir para o conteúdo principal</a>
+
+  <!-- Barra de Acessibilidade -->
+  <div class="accessibility-bar" role="region" aria-label="Acessibilidade">
+    <span>GOV.BR - Repositório Oficial</span>
+    <div>
+      <button onclick="toggleContrast()" aria-label="Alternar Alto Contraste">Alto Contraste</button>
+      <button onclick="changeFontSize(1)" aria-label="Aumentar fonte">A+</button>
+      <button onclick="changeFontSize(-1)" aria-label="Diminuir fonte">A-</button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="gov-header" role="banner">
+    <div class="gov-brand">
+      <i class="fa-solid fa-building-columns" style="font-size: 2rem; color: var(--gov-blue);" aria-hidden="true"></i>
+      <h1>Repositório de Documentos e Normativas</h1>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main id="main-content">
+    <div class="search-box">
+      <input type="text" id="searchInput" onkeyup="filterDocs()" placeholder="Buscar por nome do documento..." aria-label="Campo de busca de documentos">
+    </div>
+
+    <div id="repository-container">
+      <div class="loading">Carregando documentos diretamente do Drive...</div>
+    </div>
+  </main>
+
+  <script>
+    // =========================================================================
+    // CONFIGURAÇÕES DO GOOGLE DRIVE
+    // =========================================================================
+    const API_KEY = 'SUA_API_KEY_AQUI'; // Insira sua API Key do Google Cloud Console
+    const ROOT_FOLDER_ID = 'ID_DA_SUA_PASTA_RAIZ_AQUI'; // ID da pasta principal no Drive
+
+    let currentFontSize = 100;
+
+    // Função de Acessibilidade: Alto Contraste
+    function toggleContrast() {
+      document.body.classList.toggle('high-contrast');
+    }
+
+    // Função de Acessibilidade: Tamanho da Fonte
+    function changeFontSize(delta) {
+      currentFontSize += delta * 10;
+      if (currentFontSize >= 80 && currentFontSize <= 140) {
+        document.documentElement.style.setProperty('--font-scale', currentFontSize + '%');
+      }
+    }
+
+    // Buscar Conteúdo da Pasta Raiz (Subpastas / Seções)
+    async function loadRepository() {
+      const container = document.getElementById('repository-container');
+      try {
+        // Query para obter subpastas da pasta raiz
+        const query = `'${ROOT_FOLDER_ID}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`;
+        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id, name)&key=${API_KEY}&orderBy=name`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!data.files || data.files.length === 0) {
+          container.innerHTML = '<p>Nenhuma seção ou subpasta encontrada no repositório.</p>';
+          return;
+        }
+
+        container.innerHTML = ''; // Limpa o loading
+
+        // Para cada subpasta criada no Drive (ex: Fluxos, POPs, etc.), renderiza uma Seção
+        for (const folder of data.files) {
+          const sectionEl = document.createElement('div');
+          sectionEl.className = 'category-section';
+          sectionEl.setAttribute('data-folder-name', folder.name.toLowerCase());
+          
+          sectionEl.innerHTML = `
+            <div class="category-header" onclick="toggleSection('${folder.id}')" tabindex="0" role="button" aria-expanded="false" id="header-${folder.id}">
+              <span><i class="fa-regular fa-folder-open" style="color: var(--gov-blue); margin-right: 8px;"></i> ${escapeHtml(folder.name)}</span>
+              <i class="fa-solid fa-chevron-down" id="icon-${folder.id}"></i>
+            </div>
+            <div class="category-content" id="content-${folder.id}">
+              <div class="loading-docs">Carregando PDFs...</div>
+            </div>
+          `;
+          
+          container.appendChild(sectionEl);
+          // Carrega os arquivos PDF da subpasta assincronamente
+          fetchFilesFromFolder(folder.id);
+        }
+
+      } catch (error) {
+        console.error('Erro ao carregar repositório:', error);
+        container.innerHTML = '<p style="color:red;">Erro ao carregar documentos. Verifique a configuração da API Key e os acessos do Drive.</p>';
+      }
+    }
+
+    // Alternar visibilidade da seção
+    function toggleSection(folderId) {
+      const content = document.getElementById(`content-${folderId}`);
+      const header = document.getElementById(`header-${folderId}`);
+      const icon = document.getElementById(`icon-${folderId}`);
+      
+      const isOpen = content.classList.contains('open');
+      if (isOpen) {
+        content.classList.remove('open');
+        header.setAttribute('aria-expanded', 'false');
+        icon.className = 'fa-solid fa-chevron-down';
+      } else {
+        content.classList.add('open');
+        header.setAttribute('aria-expanded', 'true');
+        icon.className = 'fa-solid fa-chevron-up';
+      }
+    }
+
+    // Buscar PDFs dentro de uma subpasta específica
+    async function fetchFilesFromFolder(folderId) {
+      const contentEl = document.getElementById(`content-${folderId}`);
+      try {
+        const query = `'${folderId}' in parents and mimeType = 'application/pdf' and trashed = false`;
+        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id, name, webViewLink, webContentLink)&key=${API_KEY}&orderBy=name`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!data.files || data.files.length === 0) {
+          contentEl.innerHTML = '<p style="font-size:0.9rem; color:#666;">Nenhum documento PDF localizado nesta pasta.</p>';
+          return;
+        }
+
+        let html = '<ul class="doc-list">';
+        data.files.forEach(file => {
+          // Links diretos para Visualização e Download do Drive
+          const viewUrl = file.webViewLink;
+          const downloadUrl = `https://drive.google.com/uc?export=download&id=${file.id}`;
+
+          html += `
+            <li class="doc-item" data-doc-name="${file.name.toLowerCase()}">
+              <div class="doc-info">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+                <span>${escapeHtml(file.name)}</span>
+              </div>
+              <div class="doc-actions">
+                <a href="${viewUrl}" target="_blank" class="btn-gov btn-secondary" aria-label="Visualizar ${escapeHtml(file.name)} no navegador">
+                  <i class="fa-solid fa-eye"></i> Visualizar
+                </a>
+                <a href="${downloadUrl}" class="btn-gov btn-primary" download aria-label="Baixar ${escapeHtml(file.name)}">
+                  <i class="fa-solid fa-download"></i> Baixar PDF
+                </a>
+              </div>
+            </li>
+          `;
+        });
+        html += '</ul>';
+
+        contentEl.innerHTML = html;
+
+      } catch (error) {
+        console.error(`Erro na pasta ${folderId}:`, error);
+        contentEl.innerHTML = '<p style="color:red;">Falha ao carregar os documentos desta categoria.</p>';
+      }
+    }
+
+    // Filtro de Busca em Tempo Real
+    function filterDocs() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const sections = document.querySelectorAll('.category-section');
+
+      sections.forEach(section => {
+        const docs = section.querySelectorAll('.doc-item');
+        let sectionHasMatch = false;
+
+        docs.forEach(doc => {
+          const docName = doc.getAttribute('data-doc-name');
+          if (docName.includes(term)) {
+            doc.style.display = 'flex';
+            sectionHasMatch = true;
+          } else {
+            doc.style.display = 'none';
+          }
+        });
+
+        const sectionName = section.getAttribute('data-folder-name');
+        if (sectionHasMatch || sectionName.includes(term)) {
+          section.style.display = 'block';
+          if (term !== '') {
+            // Abre automaticamente a seção na busca
+            const content = section.querySelector('.category-content');
+            if(content) content.classList.add('open');
+          }
+        } else {
+          section.style.display = 'none';
+        }
+      });
+    }
+
+    // Função de sanitização para evitar injeção XSS
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Inicialização
+    window.onload = loadRepository;
+  </script>
+</body>
+</html>
